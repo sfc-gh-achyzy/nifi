@@ -331,6 +331,9 @@ public class NiFiProperties extends ApplicationProperties {
     // performance tracking
     public static final String TRACK_PERFORMANCE_PERCENTAGE = "nifi.performance.tracking.percentage";
 
+    // audit action reporter
+    public static final String COMPONENT_AUDIT_ACTION_REPORTER_IMPLEMENTATION = "nifi.components.audit.action.reporter.implementation";
+
     // performance tracking defaults
     public static final int DEFAULT_TRACK_PERFORMANCE_PERCENTAGE = 0;
 

@@ -16,6 +16,8 @@
  */
 package org.apache.nifi.framework.configuration;
 
+import org.apache.nifi.action.AuditActionReporter;
+import org.apache.nifi.action.NoOpAuditActionReporter;
 import org.apache.nifi.admin.service.AuditService;
 import org.apache.nifi.asset.AssetComponentManager;
 import org.apache.nifi.asset.AssetManager;
@@ -470,5 +472,18 @@ public class FlowControllerConfiguration {
     @Bean
     public AssetComponentManager affectedComponentManager() throws Exception {
         return new StandardAssetComponentManager(flowController());
+    }
+
+    /**
+     * Audit Action Reporter configured from NiFi Application Properties
+     *
+     * @return Audit Action Reporter
+     * @throws Exception Thrown on failures to create Audit Action Reporter
+     */
+    @Bean
+    public AuditActionReporter auditActionReporter() throws Exception {
+        final String configuredClassName = properties.getProperty(NiFiProperties.COMPONENT_AUDIT_ACTION_REPORTER_IMPLEMENTATION);
+        final String className = configuredClassName == null ? NoOpAuditActionReporter.class.getName() : configuredClassName;
+        return NarThreadContextClassLoader.createInstance(extensionManager, className, AuditActionReporter.class, properties);
     }
 }
