@@ -484,6 +484,8 @@ public class FlowControllerConfiguration {
     public AuditActionReporter auditActionReporter() throws Exception {
         final String configuredClassName = properties.getProperty(NiFiProperties.COMPONENT_AUDIT_ACTION_REPORTER_IMPLEMENTATION);
         final String className = configuredClassName == null ? NoOpAuditActionReporter.class.getName() : configuredClassName;
-        return NarThreadContextClassLoader.createInstance(extensionManager, className, AuditActionReporter.class, properties);
+        AuditActionReporter reporter = NarThreadContextClassLoader.createInstance(extensionManager, className, AuditActionReporter.class, properties);
+        reporter.init();
+        return reporter;
     }
 }
