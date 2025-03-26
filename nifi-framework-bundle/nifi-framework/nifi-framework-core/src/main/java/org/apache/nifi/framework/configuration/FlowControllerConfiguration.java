@@ -485,7 +485,7 @@ public class FlowControllerConfiguration {
         final String configuredClassName = properties.getProperty(NiFiProperties.COMPONENT_FLOW_ACTION_REPORTER_IMPLEMENTATION);
         final String className = configuredClassName == null ? NoOpFlowActionReporter.class.getName() : configuredClassName;
         FlowActionReporter reporter = NarThreadContextClassLoader.createInstance(extensionManager, className, FlowActionReporter.class, properties);
-        reporter.onConfigured(new StandardFlowActionReporterConfigurationContext(Map.of(), sslContext));
+        reporter.onConfigured(new StandardFlowActionReporterConfigurationContext(Map.of(), sslContext, trustManager));
         return reporter;
     }
 

@@ -16,15 +16,20 @@ public class ReportableAuditService implements AuditService {
     private final FlowActionReporter flowActionReporter;
     private final ActionConverter actionConverter;
 
-    public ReportableAuditService(AuditService auditService, FlowActionReporter flowActionReporter, ActionConverter actionConverter){
+    public ReportableAuditService(AuditService auditService, FlowActionReporter flowActionReporter, ActionConverter actionConverter) {
         this.auditService = auditService;
         this.flowActionReporter = flowActionReporter;
         this.actionConverter = actionConverter;
     }
+
     @Override
     public void addActions(Collection<Action> actions) {
         auditService.addActions(actions);
-        flowActionReporter.reportFlowActions(actions.stream().map(actionConverter::convert).toList());
+        flowActionReporter.reportFlowActions(
+                actions.stream()
+                        .map(actionConverter::convert)
+                        .toList()
+        );
     }
 
     @Override

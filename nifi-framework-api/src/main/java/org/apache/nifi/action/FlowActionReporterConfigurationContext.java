@@ -1,6 +1,7 @@
 package org.apache.nifi.action;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
 import java.util.Map;
 
 /**
@@ -23,4 +24,9 @@ public interface FlowActionReporterConfigurationContext {
      */
     SSLContext getSSLContext();
 
+    /**
+     * Retrieves the trust manager if set
+     * @return X509TrustManager
+     */
+    X509TrustManager getTrustManager();
 }

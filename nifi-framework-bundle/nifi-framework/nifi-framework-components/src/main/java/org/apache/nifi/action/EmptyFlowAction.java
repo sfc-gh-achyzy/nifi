@@ -4,22 +4,22 @@ import java.util.Map;
 
 public class EmptyFlowAction implements FlowAction{
     @Override
-    public Map<String, String> getProperties() {
+    public Map<String, String> getAttributes() {
         return Map.of();
     }
 
     @Override
-    public void putAllProperties(Map<String, String> properties) {
+    public void putAllAttributes(Map<String, String> properties) {
 
     }
 
     @Override
-    public String getProperty(String key) {
+    public String getAttribute(String key) {
         return "";
     }
 
     @Override
-    public void putProperty(String key, String value) {
+    public void putAttribute(String key, String value) {
 
     }
 }
