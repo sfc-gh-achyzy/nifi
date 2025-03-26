@@ -18,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class ReportableAuditServiceTest {
 
     @Mock
-    AuditService auditService;
-    InMemoryAuditActionReporter auditActionReporter;
+    private AuditService auditService;
+    private InMemoryFlowActionReporter flowActionReporter;
     private ReportableAuditService reportableAuditService;
 
     @BeforeEach
     void setUp() {
-        auditActionReporter = new InMemoryAuditActionReporter();
-        reportableAuditService = new ReportableAuditService(auditService, auditActionReporter);
+        flowActionReporter = new InMemoryFlowActionReporter();
+        reportableAuditService = new ReportableAuditService(auditService, flowActionReporter, new NoOpActionConverter());
     }
 
     @AfterEach
@@ -34,33 +34,29 @@ class ReportableAuditServiceTest {
 
     @Test
     void shouldDecorateAuditService() {
-        // given
         assertInstanceOf(AuditService.class, reportableAuditService);
     }
 
     @Test
     void shouldReportActions() {
-        // given
         final List<Action> actions = new ArrayList<>();
         actions.add(new FlowChangeAction());
 
-        // when
         reportableAuditService.addActions(actions);
 
-        // then
-        assertEquals(1, auditActionReporter.getReportedActions().size());
+        assertEquals(1, flowActionReporter.getReportedActions().size());
     }
 
-    private static class InMemoryAuditActionReporter implements AuditActionReporter {
-        List<Action> reportedActions = new ArrayList<>();
-        @Override
-        public void reportActions(Collection<Action> actions) {
+    private static class InMemoryFlowActionReporter implements FlowActionReporter {
+        List<FlowAction> reportedActions = new ArrayList<>();
+        public void reportFlowActions(Collection<FlowAction> actions) {
             reportedActions.addAll(actions);
         }
 
-        List<Action> getReportedActions() {
+        List<FlowAction> getReportedActions() {
             return reportedActions;
         }
 
     }
+
 }

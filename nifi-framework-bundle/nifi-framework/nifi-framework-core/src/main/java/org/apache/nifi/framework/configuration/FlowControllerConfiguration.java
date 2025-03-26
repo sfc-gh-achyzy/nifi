@@ -16,8 +16,7 @@
  */
 package org.apache.nifi.framework.configuration;
 
-import org.apache.nifi.action.AuditActionReporter;
-import org.apache.nifi.action.NoOpAuditActionReporter;
+import org.apache.nifi.action.*;
 import org.apache.nifi.admin.service.AuditService;
 import org.apache.nifi.asset.AssetComponentManager;
 import org.apache.nifi.asset.AssetManager;
@@ -76,6 +75,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -475,17 +475,30 @@ public class FlowControllerConfiguration {
     }
 
     /**
-     * Audit Action Reporter configured from NiFi Application Properties
+     * Flow Action Reporter configured from NiFi Application Properties
      *
-     * @return Audit Action Reporter
-     * @throws Exception Thrown on failures to create Audit Action Reporter
+     * @return Flow Action Reporter
+     * @throws Exception Thrown on failures to create Flow Action Reporter
+     */
+    @Bean(destroyMethod = "preDestruction")
+    public FlowActionReporter flowActionReporter() throws Exception {
+        final String configuredClassName = properties.getProperty(NiFiProperties.COMPONENT_FLOW_ACTION_REPORTER_IMPLEMENTATION);
+        final String className = configuredClassName == null ? NoOpFlowActionReporter.class.getName() : configuredClassName;
+        FlowActionReporter reporter = NarThreadContextClassLoader.createInstance(extensionManager, className, FlowActionReporter.class, properties);
+        reporter.onConfigured(new StandardFlowActionReporterConfigurationContext(Map.of(), sslContext));
+        return reporter;
+    }
+
+    /**
+     * Action Converter configured from NiFi Application Properties
+     *
+     * @return Action Converter
+     * @throws Exception Thrown on failures to create Action Converter
      */
     @Bean
-    public AuditActionReporter auditActionReporter() throws Exception {
-        final String configuredClassName = properties.getProperty(NiFiProperties.COMPONENT_AUDIT_ACTION_REPORTER_IMPLEMENTATION);
-        final String className = configuredClassName == null ? NoOpAuditActionReporter.class.getName() : configuredClassName;
-        AuditActionReporter reporter = NarThreadContextClassLoader.createInstance(extensionManager, className, AuditActionReporter.class, properties);
-        reporter.init();
-        return reporter;
+    public ActionConverter flowActionConverter() throws Exception {
+        final String configuredClassName = properties.getProperty(NiFiProperties.COMPONENT_FLOW_ACTION_CONVERTER_IMPLEMENTATION);
+        final String className = configuredClassName == null ? NoOpActionConverter.class.getName() : configuredClassName;
+        return NarThreadContextClassLoader.createInstance(extensionManager, className, ActionConverter.class, properties);
     }
 }
