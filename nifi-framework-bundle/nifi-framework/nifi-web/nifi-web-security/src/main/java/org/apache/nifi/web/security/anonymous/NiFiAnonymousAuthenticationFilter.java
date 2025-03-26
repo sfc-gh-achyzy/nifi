@@ -29,6 +29,6 @@ public class NiFiAnonymousAuthenticationFilter extends NiFiAuthenticationFilter 
     @Override
     public Authentication attemptAuthentication(final HttpServletRequest request) {
         // return the anonymous authentication request for this http request
-        return new NiFiAnonymousAuthenticationRequestToken(request.isSecure(), request.getRemoteAddr());
+        return new NiFiAnonymousAuthenticationRequestToken(request.isSecure(), request.getRemoteAddr(), request.getHeader("User-Agent"));
     }
 }

@@ -67,4 +67,22 @@ public interface FlowActionAttributes {
         }
     }
 
+    enum HTTP implements FlowActionAttribute {
+        CLIENT_ADDRESS("clientAddress"),
+        USER_AGENT("userAgent"),
+        ;
+
+        private static final String PREFIX = "http";
+        private final String key;
+
+        HTTP(String key) {
+            this.key = key;
+        }
+
+        @Override
+        public String key() {
+            return PREFIX + key;
+        }
+    }
+
 }

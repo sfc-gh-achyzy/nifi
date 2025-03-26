@@ -501,4 +501,13 @@ public class FlowControllerConfiguration {
         final String className = configuredClassName == null ? NoOpActionConverter.class.getName() : configuredClassName;
         return NarThreadContextClassLoader.createInstance(extensionManager, className, ActionConverter.class, properties);
     }
+
+    /**
+     * Flow Action Enricher
+     * @return Flow Action Enricher
+     */
+    @Bean
+    public FlowActionEnricher flowActionEnricher() {
+        return new FlowActionEnricher();
+    }
 }
